@@ -1,0 +1,23 @@
+{
+  "name": "mmm-scottishpremierleague",
+  "version": "1.0.0",
+  "description": "Scottish Premier League Standings Module for MagicMirror2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fewieden/MMM-ScottishPremierLeague.git"
+  },
+  "keywords": [
+    "MagicMirror",
+    "Scottish Premier League"
+  ],
+  "author": "fewieden",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fewieden/MMM-ScottishPremierLeague/issues"
+  },
+  "homepage": "https://github.com/fewieden/MMM-ScottishPremierLeague#readme",
+  "dependencies": {
+    "request": "^2.74.0",
+    "xml2js": "^0.4.17"
+  }
+}
