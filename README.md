@@ -1,4 +1,5 @@
-# MMM-ScottishPremierLeague
+# MMM-ScottishPremierLeague [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/fewieden/MMM-ScottishPremierLeague/master/LICENSE) [![Build Status](https://travis-ci.org/fewieden/MMM-ScottishPremierLeague.svg?branch=master)](https://travis-ci.org/fewieden/MMM-ScottishPremierLeague) [![Code Climate](https://codeclimate.com/github/fewieden/MMM-ScottishPremierLeague/badges/gpa.svg?style=flat)](https://codeclimate.com/github/fewieden/MMM-ScottishPremierLeague) [![Known Vulnerabilities](https://snyk.io/test/github/fewieden/mmm-scottishpremierleague/badge.svg)](https://snyk.io/test/github/fewieden/mmm-scottishpremierleague)
+
 Scottish Premier League Standings Module for MagicMirror<sup>2</sup>
 
 ## Example
@@ -6,14 +7,16 @@ Scottish Premier League Standings Module for MagicMirror<sup>2</sup>
 ![](.github/example.jpg)
 
 ## Dependencies
-  * An installation of [MagicMirror<sup>2</sup>](https://github.com/MichMich/MagicMirror)
-  * npm
-  * [request](https://www.npmjs.com/package/request)
-  * [xml2js](https://www.npmjs.com/package/xml2js)
+
+* An installation of [MagicMirror<sup>2</sup>](https://github.com/MichMich/MagicMirror)
+* npm
+* [request](https://www.npmjs.com/package/request)
+* [xml2js](https://www.npmjs.com/package/xml2js)
 
 ## Installation
- 1. Clone this repo into `~/MagicMirror/modules` directory.
- 2. Configure your `~/MagicMirror/config/config.js`:
+
+1. Clone this repo into `~/MagicMirror/modules` directory.
+1. Configure your `~/MagicMirror/config/config.js`:
 
     ```
     {
@@ -25,9 +28,11 @@ Scottish Premier League Standings Module for MagicMirror<sup>2</sup>
         }
     }
     ```
- 3. Run command `npm install` in `~/MagicMirror/modules/MMM-ScottishPremierLeague` directory.
+
+1. Run command `npm install --productive` in `~/MagicMirror/modules/MMM-ScottishPremierLeague` directory.
 
 ## Config Options
+
 | **Option** | **Default** | **Description** |
 | --- | --- | --- |
 | `api_key` | REQUIRED | Get a free api key for the Scottish Premier League [here](http://www.xmlsoccer.com/Register.aspx). |
