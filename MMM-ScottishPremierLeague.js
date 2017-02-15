@@ -1,3 +1,5 @@
+/* global Module Log */
+
 /* Magic Mirror
  * Module: MMM-ScottishPremierLeague
  *
@@ -6,130 +8,131 @@
  * MIT Licensed.
  */
 
-Module.register("MMM-ScottishPremierLeague",{
+Module.register('MMM-ScottishPremierLeague', {
 
     defaults: {
         api_key: false,
         focus_on: false,
         max_teams: false,
-        updateInterval: 180*60*1000,
+        updateInterval: 180 * 60 * 1000,
         season: '1617'
     },
 
     loading: true,
 
-    start: function() {
-        Log.info("Starting module: " + this.name);
+    start() {
+        Log.info(`Starting module: ${this.name}`);
         this.sendSocketNotification('CONFIG', this.config);
     },
 
-    socketNotificationReceived: function(notification, payload){
-        if(notification === 'DATA'){
+    socketNotificationReceived(notification, payload) {
+        if (notification === 'DATA') {
             this.standing = payload;
             this.loading = (!this.standing);
             this.updateDom(300);
         }
     },
 
-    getStyles: function() {
-        return ["font-awesome.css", "MMM-ScottishPremierLeague.css"];
+    getStyles() {
+        return ['font-awesome.css', 'MMM-ScottishPremierLeague.css'];
     },
 
-    getTranslations: function() {
+    getTranslations() {
         return {
-            en: "translations/en.json",
-            de: "translations/de.json"
+            en: 'translations/en.json',
+            de: 'translations/de.json'
         };
     },
 
-    getDom: function() {
-        var wrapper = document.createElement("div");
+    getDom() {
+        const wrapper = document.createElement('div');
 
         if (this.loading ||
             !this.standing) {
-            var title = document.createElement("header");
+            const title = document.createElement('header');
             title.innerHTML = this.name;
             wrapper.appendChild(title);
 
-            var subtitle = document.createElement("div");
-            subtitle.classList.add("small", "dimmed", "light");
-            subtitle.innerHTML = (this.loading) ? this.translate("LOADING") : this.translate("NO_DATA_AVAILABLE");
+            const subtitle = document.createElement('div');
+            subtitle.classList.add('small', 'dimmed', 'light');
+            subtitle.innerHTML = (this.loading) ? this.translate('LOADING') : this.translate('NO_DATA_AVAILABLE');
             wrapper.appendChild(subtitle);
 
             return wrapper;
         }
 
-        if(this.standing){
+        if (this.standing) {
             // League header
-            var title = document.createElement("header");
-            title.innerHTML = "Scottish Premier League";
+            const title = document.createElement('header');
+            title.innerHTML = 'Scottish Premier League';
             wrapper.appendChild(title);
 
             // Standings container
-            var table = document.createElement('table');
+            const table = document.createElement('table');
             table.classList.add('xsmall', 'table');
 
             // Standings header row
-            var row = document.createElement('tr');
-            row.classList.add('row');
+            const headerRow = document.createElement('tr');
+            headerRow.classList.add('row');
 
-            var position = document.createElement('th');
-            row.appendChild(position);
+            const position = document.createElement('th');
+            headerRow.appendChild(position);
 
-            var name = document.createElement('th');
-            name.classList.add('name');
-            name.innerHTML = this.translate("TEAM");
-            row.appendChild(name);
+            const nameLabel = document.createElement('th');
+            nameLabel.classList.add('name');
+            nameLabel.innerHTML = this.translate('TEAM');
+            headerRow.appendChild(nameLabel);
 
-            var pointsLabel = document.createElement('th');
+            const pointsLabel = document.createElement('th');
             pointsLabel.classList.add('centered');
-            var points = document.createElement('i');
-            points.classList.add('fa', 'fa-line-chart');
-            pointsLabel.appendChild(points);
-            row.appendChild(pointsLabel);
+            const pointsIcon = document.createElement('i');
+            pointsIcon.classList.add('fa', 'fa-line-chart');
+            pointsLabel.appendChild(pointsIcon);
+            headerRow.appendChild(pointsLabel);
 
-            var goalsLabel = document.createElement('th');
+            const goalsLabel = document.createElement('th');
             goalsLabel.classList.add('centered');
-            var goals = document.createElement('i');
-            goals.classList.add('fa', 'fa-soccer-ball-o');
-            goalsLabel.appendChild(goals);
-            row.appendChild(goalsLabel);
+            const goalsIcon = document.createElement('i');
+            goalsIcon.classList.add('fa', 'fa-soccer-ball-o');
+            goalsLabel.appendChild(goalsIcon);
+            headerRow.appendChild(goalsLabel);
 
-            table.appendChild(row);
+            table.appendChild(headerRow);
 
             // Get First and Last teams to display in standings
-            var focusTeamIndex, firstTeam, lastTeam;
+            let focusTeamIndex;
+            let firstTeam;
+            let lastTeam;
 
             /* focus_on for current league is set */
-            if(this.config.focus_on){
+            if (this.config.focus_on) {
                 /* focus_on TOP */
-                if(this.config.focus_on === 'TOP'){
+                if (this.config.focus_on === 'TOP') {
                     focusTeamIndex = -1;
                     firstTeam = 0;
-                    lastTeam = (this.config.max_teams && this.config.max_teams <= this.standing.length) ? this.config.max_teams : this.standing.length;
-                }
-                /* focus_on BOTTOM */
-                else if(this.config.focus_on === 'BOTTOM'){
+                    lastTeam = (this.config.max_teams && this.config.max_teams <= this.standing.length) ?
+                        this.config.max_teams : this.standing.length;
+                } else if (this.config.focus_on === 'BOTTOM') {
                     focusTeamIndex = -1;
-                    firstTeam = (this.config.max_teams && this.config.max_teams <= this.standing.length) ? this.standing.length - this.config.max_teams : 0;
+                    firstTeam = (this.config.max_teams && this.config.max_teams <= this.standing.length) ?
+                        this.standing.length - this.config.max_teams : 0;
                     lastTeam = this.standing.length;
-                }
-                /* focus_on specific team */
-                else {
-                    for(var i = 0; i < this.standing.length; i++){
+                } else {
+                    for (let i = 0; i < this.standing.length; i += 1) {
                         /* focus_on is teamName */
-                        if(this.standing[i].Team[0] === this.config.focus_on){
+                        if (this.standing[i].Team[0] === this.config.focus_on) {
                             focusTeamIndex = i;
                             /* max_teams is set */
-                            if(this.config.max_teams){
-                                var before = parseInt(this.config.max_teams / 2);
+                            if (this.config.max_teams) {
+                                const before = parseInt(this.config.max_teams / 2);
                                 firstTeam = focusTeamIndex - before >= 0 ? focusTeamIndex - before : 0;
                                 /* index for lastTeam is in range */
-                                if(firstTeam + this.config.max_teams <= this.standing.length){
-                                    lastTeam =  firstTeam + this.config.max_teams;
+                                if (firstTeam + this.config.max_teams <= this.standing.length) {
+                                    lastTeam = firstTeam + this.config.max_teams;
                                 } else {
                                     lastTeam = this.standing.length;
-                                    firstTeam = lastTeam - this.config.max_teams >= 0 ? lastTeam - this.config.max_teams : 0;
+                                    firstTeam = lastTeam - this.config.max_teams >= 0 ?
+                                        lastTeam - this.config.max_teams : 0;
                                 }
                             } else {
                                 firstTeam = 0;
@@ -146,36 +149,36 @@ Module.register("MMM-ScottishPremierLeague",{
             }
 
             // Render Team Rows
-            for(var i = firstTeam; i < lastTeam; i++){
-                var row = document.createElement('tr');
-                if(i === focusTeamIndex){
+            for (let i = firstTeam; i < lastTeam; i += 1) {
+                const row = document.createElement('tr');
+                if (i === focusTeamIndex) {
                     row.classList.add('bright');
                 }
 
-                var pos = document.createElement('td');
+                const pos = document.createElement('td');
                 pos.innerHTML = i + 1;
                 row.appendChild(pos);
 
-                var name = document.createElement('td');
+                const name = document.createElement('td');
                 name.classList.add('name');
                 name.innerHTML = this.standing[i].Team[0];
                 row.appendChild(name);
 
-                var points = document.createElement('td');
+                const points = document.createElement('td');
                 points.innerHTML = this.standing[i].Points[0];
                 points.classList.add('centered');
                 row.appendChild(points);
 
-                var goals = document.createElement('td');
+                const goals = document.createElement('td');
                 goals.innerHTML = this.standing[i].Goal_Difference[0];
                 goals.classList.add('centered');
                 row.appendChild(goals);
 
                 // Create fade in/out effect.
                 if (this.config.max_teams && focusTeamIndex >= 0) {
-                    if (i != focusTeamIndex) {
-                        var currentStep = Math.abs(i - focusTeamIndex);
-                        row.style.opacity = 1 - (1 / this.config.max_teams * currentStep);
+                    if (i !== focusTeamIndex) {
+                        const currentStep = Math.abs(i - focusTeamIndex);
+                        row.style.opacity = 1 - ((1 / this.config.max_teams) * currentStep);
                     }
                 }
 
